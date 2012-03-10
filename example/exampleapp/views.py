@@ -6,6 +6,7 @@ from django.template import RequestContext
 from example.exampleapp.models import Whisper
 from example.exampleapp.forms import WhisperForm
 
+
 def whisper(request, template_name='exampleapp/whisper.html'):
     whisper_list = Whisper.objects.all().order_by('-created_at')
     if request.method == 'POST':
@@ -16,7 +17,6 @@ def whisper(request, template_name='exampleapp/whisper.html'):
         form = WhisperForm()
     return render_to_response(
         template_name, locals(), context_instance=RequestContext(request))
-
 
 
 class WhisperView(FormView):
