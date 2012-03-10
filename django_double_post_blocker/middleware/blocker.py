@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse as url_reverse
 
 
 REDIRECT_URL = "/"
@@ -12,7 +11,12 @@ CACHE_TIME = 7200
 
 class DoublePostBlockerMiddleware:
     """
-    POSTにて一緒に投げられた{% dpb_token %}(生成されたmd5値)を一時的にキャッシュし、
+    Checks {% double_post_blocker_token %} in template,
+    redirects to DBP_REDIRECT_URL in project settings or
+    domain index if duplicate with cached value.
+
+    POSTにて一緒に投げられた{% double_post_blocker_token %}
+    (生成されたmd5値)を一時的にキャッシュし、
     同じdbp_tokenキーをもったPOSTがきたら無視する
 
     このmiddlewareを利用する場合は
@@ -20,9 +24,11 @@ class DoublePostBlockerMiddleware:
     "django_double_post_blocker.middleware.DoublePostBlockerMiddleware"
      を組み込んでください
 
-    2.POSTを行うテンプレート中の<FORM>...</FORM>中に{% dbp_token %}を記述してください
+    2.POSTを行うテンプレート中の<FORM>...</FORM>中に{% dbp_token %}を
+    記述してください
 
-    3. リダイレクト先のURLを静的なものに変更する場合settings.pyに以下を追加してください
+    3. リダイレクト先のURLを静的なものに変更する場合settings.pyに以下を
+    追加してください
 
     DPB_REDIRECT_URL = "http://[飛ばし先のURL]"
     """

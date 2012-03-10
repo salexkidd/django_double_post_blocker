@@ -1,0 +1,36 @@
+- extends 'layouts/base.html'
+  - block body
+    - load double_post_blocker
+
+    %h1
+      Whispers
+
+    %form{action:'{% url whisper %}',
+          method:'post',
+          charset:'utf-8'}
+      %fieldset
+        %legend
+          Whisper something...
+        - csrf_token
+        - double_post_blocker_token
+       
+        - for field in form
+          %p
+            = field.label_tag
+            %br
+            = field
+
+        %input{type:'submit'}
+
+    %hr
+
+    %dl
+      - for whisper in whisper_list
+        %dt= whisper.author
+        %dd
+          = whisper.body
+          %br
+          = whisper.created_at
+      - empty
+        %li
+          No whispers yet.
