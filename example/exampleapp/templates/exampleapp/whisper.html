@@ -1,0 +1,39 @@
+{% extends 'layouts/base.html' %}
+  {% block body %}
+    {% load double_post_blocker %}
+    <h1>
+      Whispers
+    </h1>
+    <form action='{% url whisper %}' charset='utf-8' method='post'>
+      <fieldset>
+        <legend>
+          Whisper something...
+        </legend>
+        {% csrf_token %}
+        {% double_post_blocker_token %}
+        {% for field in form %}
+          <p>
+            {{ field.label_tag }}
+            <br />
+            {{ field }}
+          </p>
+        {% endfor %}
+        <input type='submit' />
+      </fieldset>
+    </form>
+    <hr />
+    <dl>
+      {% for whisper in whisper_list %}
+        <dt>{{ whisper.author }}</dt>
+        <dd>
+          {{ whisper.body }}
+          <br />
+          {{ whisper.created_at }}
+        </dd>
+      {% empty %}
+        <li>
+          No whispers yet.
+        </li>
+      {% endfor %}
+    </dl>
+  {% endblock %}
